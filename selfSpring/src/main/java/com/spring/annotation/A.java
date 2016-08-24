@@ -7,6 +7,7 @@ import com.spring.springidol.Performer;
 public class A implements Performer{
 	private Instrument instrument;
 	
+	
 	public Instrument getInstrument() {
 		return instrument;
 	}
