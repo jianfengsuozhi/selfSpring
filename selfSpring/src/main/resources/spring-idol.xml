@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:p="http://www.springframework.org/schema/p"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:util="http://www.springframework.org/schema/util"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+		default-init-method="turnOnLights1" default-destroy-method="turnOffLights1">
+  	   <!-- 多个bean公用的初始化方法 -->
+  	 
+  	 <!-- 使用xml装配bean和注入属性值 -->  
+  	<!-- 创建对象:利用反射 -->
+	<bean id="duke" 
+	    class="com.springinaction.springidol.Juggler" >
+	    <!--不配置：默认构造器，配置另外一个构造器-->
+	 	<constructor-arg value="15"/>    
+	</bean>
+	
+	<!-- 构造器注入属性值 -->
+    <bean id="poeticDuke"
+      class="com.springinaction.springidol.PoeticJuggler">
+      	<!--用value方法配置简单值，用ref引用其他bean -->
+        <!--字符串类型和基本类型 -->
+    	<constructor-arg value="15" />
+    	<!--bean实例的id sonnet29 放在后面也可以-->
+    	<constructor-arg ref="sonnet29" />
+  	</bean>
+  	<bean id="sonnet29"
+      class="com.springinaction.springidol.Sonnet29" />	  
+      
+    <!-- 只有一个为参赛者展示自身才艺的舞台？ -->
+    <!--工厂方法:没有构造方法  创建相同的实例  多个bean,调用多次-->  
+  	<bean id="theStage"
+      class="com.springinaction.springidol.Stage" 
+      factory-method="getInstance"/>	  
+  	<bean id="theStage1"
+      class="com.springinaction.springidol.Stage" 
+      factory-method="getInstance"/>	  
+   
+    <!--每一位观看演出的人 都必须给予一张不同的门票？-->
+   	<!--bean的作用域  一个bean 调用多次  对象实例-->  
+   	<!--默认作用域:singleton 一个bean 一个对象  true-->
+  	<bean id="ticket"
+      class="com.springinaction.springidol.Ticket" />	
+    <!--作用域：每次调用创建一个实例 false -->  	
+  	<bean id="ticket1"
+      class="com.springinaction.springidol.Ticket" scope="prototype"/>	
+        
+    <!-- 在礼堂表演前开灯和在表演结束后关灯 ？-->
+<!--   	<bean id="auditorium"
+      class="com.springinaction.springidol.Auditorium" init-method="turnOnLights" 
+      destroy-method="turnOffLights"/>	  --> 
+      
+     <!--setter方法注入属性值:私有成员变量  set方法 -->
+     <!--bean的属性值是单值-->
+     <!--使用property装配属性 -->
+     <!-- 共享bean -->
+     <bean id="kenny"
+      class="com.springinaction.springidol.Instrumentalist">
+   		 <property name="song" value="Jingle Bells" />
+   		 <property name="instrument" ref="saxophone" />
+ 	 </bean>
+ 	 <!-- 独享bean 同内部类-->
+     <bean id="kenny1"
+      class="com.springinaction.springidol.Instrumentalist">
+   		 <property name="song" value="Jingle Bells" />
+   		 <property name="instrument">
+   		 	<bean class="com.springinaction.springidol.Saxophone"/>
+   		 </property>
+ 	 </bean>
+     <bean id="kenny2"
+      class="com.springinaction.springidol.Instrumentalist">
+   		 <constructor-arg value="15"/>
+   		 <constructor-arg >
+   		 	<bean class="com.springinaction.springidol.Saxophone"/>
+   		 </constructor-arg>
+ 	 </bean>
+      <bean id="saxophone"
+      class="com.springinaction.springidol.Saxophone" />
+      <!-- 使用p命名空间装配属性  schema模板 水平页面空间紧张时使用-->
+      <bean id="kenny3"
+      class="com.springinaction.springidol.Instrumentalist"
+      p:song = "Jingle Bells" 
+      p:instrument-ref = "saxophone"/>
+      
+      <!--bean的属性值是集合(多值) -->
+      <!--装配集合 -->
+      <!-- list 可重复-->
+      <bean id="hank" class="com.springinaction.springidol.OneManBand">
+      	<property name="strs">
+      		<list>
+      		  <value>1</value>
+      		  <value>2</value>
+      		  <value>3</value>
+      		</list>
+      	</property>
+      </bean>
+      <!-- set 不可重复 -->
+      <bean id="hank1" class="com.springinaction.springidol.OneManBand">
+      	<property name="strs">
+      		<set>
+      		  <value>1</value>
+      		  <value>2</value>
+      		  <value>3</value>
+      		</set>
+      	</property>
+      </bean>
+      <!-- map 名称和值类型是任意  -->
+<!--       <bean id="hank2" class="com.springinaction.springidol.OneManBand">
+      	<property name="strs">
+			<map>
+				key String类型 key-ref 引用类型 
+				<entry key="1" value="1"/>
+				<entry key="2" value="2"/>
+				<entry key="3" value="3"/>
+			</map>
+      	</property>
+      </bean> -->
+      <!-- key和value类型都是 String  property:props:prop -->
+ <!--      <bean id="hank3" class="com.springinaction.springidol.OneManBand">
+      	
+      	<property name="strs">
+			<props>
+			  <prop key="1">123</prop>
+			  <prop key="2">123</prop>
+			  <prop key="3">123</prop>
+			</props>
+      	</property>
+      </bean> -->
+      
+      <!-- 装配null值 -->
+ <!-- <bean>
+      	<property name="someNullProperty"><null/></property>
+      </bean> -->
+      
+      <!-- 使用表达式：运行时 利用构造器注入或setter注入来装配bean-->
+      <!-- 获取值  同${}-->
+      <bean id="ex1" class="com.springinaction.springidol.TestExpressionInject">
+         <!-- 基本类型和字符串 -->
+         <property name="a" value="#{5}"/>
+         <property name="str" value="#{'wei'}"/>
+         <property name="bool" value="#{false}"/>
+         <!-- 引用bean,Properties和方法 -->
+         <property name="saxophone" value="#{saxophone}"/>
+         <!-- 引用bean的属性和方法 -->
+         <property name="song" value="#{kenny3.song}"/>
+         <property name="return1" value="#{kenny3.testReturn()}"/>
+         <!-- ?. 相当于? -->
+         <property name="return2" value="#{kenny3.testReturn()?.toUpperCase()}"/>
+         <!-- 操作类 静态方法和常量  T()运算符 T(java.lang.math) 返回math对象 -->
+         <property name="PI" value="#{T(java.lang.Math).PI}"/>
+         <property name="random" value="#{T(java.lang.Math).random()}"/>
+      </bean>
+      
+      <!-- 在值上进行操作 -->
+      <bean id="ex2" class="com.springinaction.springidol.TestExpressionInject01">
+        <!-- 数值运算：四则运算 % ^(乘方)-->
+      	<property name="sum" value="#{T(java.lang.Math).PI+2}" /><!-- 相加 -->
+      	<property name="sumStr" value="#{T(java.lang.Math).PI+''+2}" /><!-- 字符串连接 -->
+      	<property name="area" value="#{T(java.lang.Math).PI * 2^2}" />
+      	<!-- 比较值 建议使用符号运算符（有些符号有特殊含义） eq lt le gt ge-->
+      	<property name="equl" value="#{T(java.lang.Math).PI eq 3.14}" />
+      	<!-- 逻辑表达式 and or 或（not和!都可以） -->
+      	<property name="and" value="#{true and false}" />
+      	<!-- 条件表达式 :三元表达式-->
+      	<property name="sanSelect1" value="#{kenny3.testReturn() != null ? kenny3.testReturn() : '后'}" />
+      	<!-- 上面的简化写法  出现2次   按顺序-->
+      	<property name="sanSelect2" value="#{kenny3.testReturn() ?: '后'}" />
+      	<!-- 正则表达式 -->
+      	<property name="matches" value="#{'111' matches '[0-9]{3}'}" />
+      </bean>
+      <!-- 集合操作 util命名空间 -->
+      <!-- 定义list集合 -->
+      <util:list id="cities">
+      	<bean class="com.springinaction.springidol.City" p:name="1" p:value="10"/>
+      	<bean class="com.springinaction.springidol.City" p:name="2" p:value="20"/>
+      	<bean class="com.springinaction.springidol.City" p:name="3" p:value="30"/>
+      	<bean class="com.springinaction.springidol.City" p:name="4" p:value="40"/>
+      </util:list>
+
+      <!-- 通过[]访问成员变量  -->
+      <bean id="ex3"  class="com.springinaction.springidol.TestExpressionInject02">
+      	<property name="choseCities" value="#{cities[2]}"/><!-- 第三个城市 -->
+      	<!-- map -->
+      	<!-- <property name="choseCities1" value="#{cities['Dallas']}"/>第三个城市 -->
+      	<property name="name" value="#{settings['name']}"></property><!-- 同map -->
+      	<!-- systemEnvironment 系统所有环境变量 -->
+      	<property name="java_home" value="#{systemEnvironment['JAVA_HOME']}"/>
+      	<!-- 取字符串的某个字符 -->
+		<property name="chars" value="#{'this is'[3]}"/>  <!-- s -->  
+		
+		<!--查询集合成员  查询运算符 .?[] -->  	
+		<property name="bigCities" value="#{cities.?[value gt 20]}"/>  <!-- s -->  
+		<!-- .^[] .$[] 查询出第一个匹配项和最后一个匹配项 -->
+		<property name="bigCity" value="#{cities.^[value gt 20]}"/> 
+      </bean>
+      <!-- properties 加载properties配置文件-->
+      <util:properties id="settings" location="classpath:settings.properties"></util:properties>
+      
+      
+</beans>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:p="http://www.springframework.org/schema/p"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:util="http://www.springframework.org/schema/util"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context 
+     	http://www.springframework.org/schema/context/spring-context.xsd"
+		 >
+	 <!-- default-autowire="byType" -->
+  	 <!--该配置文件所有bean的默认自动装配  -->
+  	 <!-- 自动装配:在xml使用autowire的自动装配和注解自动装配 -->
+  <!--     自动装配bean属性
+      若id重复会出现 Bean name 'instrument' is already used in this <beans> element
+      byName:id或name与属性名称相同的  问题:id是instrument可能被多个bean所使用
+      <bean id="kenny"
+      class="com.springinaction.springidol.Instrumentalist" autowire="byName">
+   		 <property name="song" value="Jingle Bells" />
+ 	 </bean>
+ 	 <bean id="a" class="com.spring.annotation.A" autowire="byName"/>
+ 	 
+ 	 <bean id="instrument"
+      class="com.springinaction.springidol.Saxophone" />
+      byType
+     <bean id="kenny1"
+      class="com.springinaction.springidol.Instrumentalist" autowire="byType">
+   		 <property name="song" value="Jingle Bells" />
+ 	 </bean>
+      需要自动装配属性的类型和多个类型相同时，会抛出异常，也可通过排除某些bean autowire-candidate
+      No unique bean of type [com.springinaction.springidol.Instrument] is defined
+ 	 <bean id="instrument1"
+      class="com.springinaction.springidol.Saxophone" autowire-candidate="false"/>
+      使用构造器装配   构造器所有参数按类型 
+      <bean id="poeticDuke"
+      class="com.springinaction.springidol.PoeticJuggler" autowire="constructor"/>
+      <bean id="sonnet29"
+      class="com.springinaction.springidol.Sonnet29" />	  
+      
+      混合使用自动装配和显示装配  先显示装配后自动装配
+       <bean id="kenny2"
+      class="com.springinaction.springidol.Instrumentalist" autowire="byType">
+   		 <property name="song" value="Jingle Bells" />
+   		 <property name="instrument"><null></null></property>
+ 	 </bean> -->
+ 	 
+ 	 
+ 	 <!-- 使用注解自动装配 -->
+ 	 <!--spring容器默认禁用注解装配，下面是启用方式  去除了constructor-arg和property -->
+ 	<!--  <context:annotation-config/> -->
+ 	 <!--自动检测bean  功能：context:annotation-config+消除bean  自动扫描指定的包及其子包 -->
+ <!-- 	 <context:component-scan base-package="com.spring"/> -->
+ 
+ 	<!-- 过滤器：在不使用如@Service情况下，自动注册spring bean 加注解的类也扫描-->
+ 	<context:component-scan base-package="com.spring">
+ 		<context:include-filter type="assignable" expression="com.spring.annotation.B"/>
+ 		<context:exclude-filter type="assignable" expression="com.spring.annotation.B1"/>
+ 	</context:component-scan>
+ 	
+ <!-- 	      <bean id="kenny"
+      class="com.springinaction.springidol.Instrumentalist">
+ 	 </bean>
+ 	  <bean id="instrument"
+      class="com.springinaction.springidol.Saxophone" />
+ 	  <bean id="instrument1"
+      class="com.springinaction.springidol.Saxophone" /> -->
+      
+      
+</beans>

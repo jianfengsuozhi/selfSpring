@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:p="http://www.springframework.org/schema/p"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:util="http://www.springframework.org/schema/util"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+   <bean id="eddie"
+      class="com.spring.springidol.Instrumentalist">
+    <property name="instrument">
+      <bean class="com.spring.annotation.Guitar" />
+    </property>
+  </bean>
+  
+  <!-- 通过切面添加新功能 -->
+  <aop:config>
+  	  <aop:aspect>
+  	  <!-- 那些实现Performer接口的都要实现Contestant接口 -->
+	  <aop:declare-parents 
+	    types-matching="com.spring.springidol.Performer+" 
+	    implement-interface="com.spring.aop.Contestant"
+	    default-impl="com.spring.aop.GraciousContestant"/>
+	 </aop:aspect>
+  </aop:config>
+
+</beans>

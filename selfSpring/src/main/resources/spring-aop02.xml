@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:p="http://www.springframework.org/schema/p"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:util="http://www.springframework.org/schema/util"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	  <bean id="audience" 
+      class="com.spring.aop.Audience" />
+	
+ <aop:config>
+  <aop:aspect ref="audience">
+    <aop:pointcut id="performance" expression=
+        "execution(* com.spring.springidol.Performer.perform(..))" 
+        /> 
+    <aop:before 
+        pointcut-ref="performance"
+        method="takeSeats" /> 
+    <aop:before 
+        pointcut-ref="performance"
+        method="turnOffCellPhones" />
+    <aop:after-returning
+        pointcut-ref="performance" 
+        method="applaud" /> 
+    <aop:after-throwing 
+        pointcut-ref="performance" 
+        method="demandRefund" /> 
+  </aop:aspect>
+</aop:config>
+<!-- 第一个前置后 ，后置前  观看表演的时间 -->
+<aop:config>
+  <aop:aspect ref="audience">
+    <aop:pointcut id="performance2" expression=
+        "execution(* com.spring.springidol.Performer.perform(..))" 
+        />
+    <aop:around 
+        pointcut-ref="performance2"
+        method="watchPerformance" /> <!--<co id="co_around"/>-->
+  </aop:aspect>
+</aop:config>
+
+	<bean id="testPerfomer" class="com.spring.aop.TestPerfomer"/>
+</beans>
